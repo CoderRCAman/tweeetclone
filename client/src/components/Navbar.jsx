@@ -105,7 +105,7 @@ export default function Navbar() {
                 onClick={()=>{
                    localStorage.clear('firstLogin') ;
                    localStorage.clear('user_id') ;
-                   navigate('/login')
+                   window.location.href='/login'
                 }}
               >
                 Log out

@@ -38,7 +38,7 @@ export default function Login() {
         toast.success(postResponse.data.msg);
         localStorage.setItem('firstLogin',true) ; 
         localStorage.setItem('user_id',postResponse.data.user_id) ;  
-        navigate('/home')
+        window.location.href = '/home'
       }
       
     } catch (error) {
