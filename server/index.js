@@ -19,7 +19,8 @@ app.use(cors({
 
 app.use(morgan("tiny"));
 app.use(cookieParser())
-app.use(express.json());
+app.use(express.json()); 
+app.use(express.static('pictures'))
 app.use("/", appRoutes);
 
 app.listen(PORT, () =>

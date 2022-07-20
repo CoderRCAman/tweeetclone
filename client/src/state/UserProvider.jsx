@@ -7,6 +7,7 @@ const UserContext = createContext();
 export default function UserProvider({ children }) {
   const [tweetModal , setTWeetModal] =useState(false)
   const [refresh,setRefresh] = useState(0) ; 
+  const [User, setUser] = useState(null);
   const [navClicks, setNavClicks] = useState({
     home: false,
     notification: false,
@@ -20,7 +21,6 @@ export default function UserProvider({ children }) {
   },[refresh])
 
 
-  const [User, setUser] = useState(null);
   async function getUserInfo () {
     const id = localStorage.getItem('user_id') ; 
      try {

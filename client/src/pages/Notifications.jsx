@@ -1,9 +1,48 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import SearchUser from "../components/SearchUser";
 import { ArrowLeftOutlined } from "@ant-design/icons";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+const monthNames = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+const getJoinedDate = (date) => {
+  const newDate = new Date(date);
+  return (
+    monthNames[newDate.getMonth()] +
+    " " +
+    newDate.getDate() +
+    ", " +
+    newDate.getFullYear().toString()
+  );
+};
 export default function Notifications() {
+  const [notifications, setNotifications] = useState([]);
+  const getNotifications = async () => {
+    const ns = await axios.get("http://localhost:5000/notification", {
+      withCredentials: true,
+    });
+    console.log(ns.data);
+    if (ns.status === 200) setNotifications(ns.data); 
+    localStorage.setItem('nf_count' , ns.data.length) ;
+  }; 
+  
+
+  useEffect(() => {
+    getNotifications();
+  }, []);
   const navigate = useNavigate(-1);
   return (
     <div className="min-h-screen  bg-black flex">
@@ -19,49 +58,43 @@ export default function Notifications() {
           <p className="text-white font-bold text-lg">Notifications</p>
         </div>
         <div className="text-white  w-full border-b-[1px] border-b-gray-800 mt-10 ">
-          <button className="w-[50%] hover:bg-[#181818] py-3 font-bold ">
-            All
-          </button>
-          <button className="w-[50%] hover:bg-[#181818] py-3 font-bold">
-            Mentions
+          <button className="tex-center w-full hover:bg-[#181818] py-3 font-bold ">
+            Feeds
           </button>
         </div>
-        <div className="text-gray-600">
+        <div className="text-gray-600 space-y-4">
           {/* contents  */}
-          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nemo sequi
-          tempore aspernatur omnis necessitatibus sed accusantium quibusdam
-          voluptatum quia aperiam repellat dignissimos ipsum labore explicabo
-          voluptates, ex ea! Voluptatem, vero. Aperiam, dolor ipsum debitis
-          optio at hic, id magnam ad sit ab dignissimos est ipsa cumque commodi
-          atque velit molestias et consequatur quae nulla eveniet, cupiditate
-          qui asperiores! Voluptates, at! Quisquam voluptatum sit facilis, ab
-          dolorum enim magni optio quidem nobis vitae! Hic, incidunt? Labore
-          dignissimos vel rem itaque, libero, impedit laborum mollitia vero cum
-          ipsum error velit fuga blanditiis! Ipsam quae numquam aut quos!
-          Praesentium asperiores reiciendis, soluta dolorum necessitatibus
-          impedit saepe! Dicta voluptates corrupti magni, magnam velit dolor
-          officia vero tempora laborum atque aut neque, repellat in harum? Est
-          assumenda corporis libero nihil facere, odit, suscipit reprehenderit
-          animi cum voluptate debitis. Eligendi, magnam! Porro, amet quidem
-          perferendis necessitatibus voluptate neque atque eum aperiam, illum at
-          nemo ab quaerat! Doloribus quod aperiam odit ipsum voluptate labore
-          accusamus corporis minus quam sequi eveniet necessitatibus dolores
-          nemo, tempore laborum ex vero fugit obcaecati nostrum quia ratione
-          accusantium voluptatem! Adipisci, magnam laborum? Quia labore eligendi
-          quaerat itaque accusamus, dignissimos, provident consequuntur sapiente
-          rem illo totam voluptas laborum et. Quas obcaecati deleniti eveniet
-          corporis impedit ratione quod quibusdam mollitia, fugit nulla velit
-          quae. Vero, commodi ab quos illum magni repellat neque praesentium
-          veniam quis? Aut nisi alias atque tenetur magnam, officiis aspernatur.
-          Inventore expedita officiis fuga sequi provident hic quas dolorem
-          eligendi quos. Voluptates aliquid, totam blanditiis repellendus vel
-          dolorem, ducimus odio tempore quod ut nulla aliquam reiciendis, autem
-          fugiat voluptate vitae dicta? Commodi molestias aut dignissimos id
-          labore dolorem. Id, autem neque! Dolorum tenetur iusto eaque rem
-          voluptatum voluptates qui placeat et alias, culpa exercitationem
-          asperiores veritatis necessitatibus voluptate reprehenderit aut nam ea
-          ex odio minima aliquam consectetur nesciunt. Laboriosam, deserunt
-          perspiciatis?
+          {notifications.map((nf) => (
+            <Link
+              to={`/post/${nf._id}`}
+              className="p-1 flex items-center justify-evenly hover:bg-slate-800 cursor-pointer "
+            >
+              <img
+                className="w-16 h-16 rounded-full "
+                src={nf.user_id.avatar.download_url}
+              />
+              <div className="flex  w-full items-center ">
+                <div className="ml-4">
+                  <h1 className="text-xl font-bold text-stone-300">
+                    {nf.user_id.name}
+                  </h1>
+                  <h6 className="text-md font-bold text-stone-700">
+                    @{nf.user_id.user_name}
+                  </h6>
+                </div>
+                <div className="ml-12 font-semibold text-xl">
+                  Has posted a tweet!
+                </div>
+                <div className="flex items-center ml-16">
+                  <h1>at</h1>
+                  <div className="flex flex-col items-center text-sm ml-2">
+                    <p>{new Date(nf.createdAt).toLocaleTimeString()} </p>
+                    <p>{getJoinedDate(new Date(nf.createdAt))}</p>
+                  </div>
+                </div>
+              </div>
+            </Link>
+          ))}
         </div>
       </div>
       <SearchUser />

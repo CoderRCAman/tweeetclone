@@ -1,5 +1,5 @@
 import React, { useRef, useState, useContext, useEffect } from "react";
-
+import {useNavigate} from 'react-router-dom'
 import Navbar from "../components/Navbar";
 import Modal from "react-responsive-modal";
 import "react-responsive-modal/styles.css";
@@ -25,7 +25,7 @@ export default function Home() {
     content: "",
     picture: null,
   });
-
+  const navigate = useNavigate() ;
   const fileRef = useRef(null);
   const user_ctx = useContext(UserContext);
   const contentRef = useRef() ;
@@ -151,7 +151,7 @@ export default function Home() {
           <div className="mt-10">{FormComponent()}</div>
         </div>
         <div>
-          {user_ctx?.user?.tweets.length === 0 ? (
+          {user_ctx?.user?.feeds.length === 0 ? (
             <div className="px-5 flex items-start py-3 space-x-3 border-t-[1px] border-t-gray-800">
               <img
                 src={user_ctx.user?.avatar.download_url}
@@ -208,42 +208,45 @@ export default function Home() {
               </div>
             </div>
           ) : (
-            user_ctx?.user?.tweets.map((tweet,index) => (
-              <div key={index} className="px-5 flex items-start py-3 space-x-3  border-y-[1px] border-gray-800">
+            user_ctx?.user?.feeds.slice(0).reverse().map((tweet,index) => (
+              <div className="border-y-[1px] border-gray-800">
+              <div key={index} className="px-5 flex items-start py-3 space-x-3 cursor-pointer  " onClick={()=>navigate(`/post/${tweet._id}`)}>
                 <img
-                  src={user_ctx.user?.avatar.download_url}
+                  src={tweet.user_id?.avatar.download_url}
                   alt=""
                   className="h-12 w-12 rounded-full"
                 />
                 <div className="text-white font-[Roboto]">
                   <h1 className="font-bold text-lg">
                     {" "}
-                    {user_ctx?.user?.name}
+                    {tweet?.user_id?.name}
                   </h1>
                   <p>{tweet.content}</p>
-                  {tweet.picture && (
+                  {tweet.pictures && (
                     <img
-                      src={tweet.picture}
+                      src={tweet.pictures.download_url}
                       alt=""
                       className="rounded-md  mt-2"
                     />
                   )}
-                  <div className="flex space-x-10">
-                    <div className="group flex items-center cursor-pointer space-x-2">
-                      <CommentOutlined className="text-gray-500 text-lg mt-2    group-hover:text-[#1D9BF0] " />
-                      <p className="mt-3 text-sm text-slate-600 group-hover:text-[#1d9bf0]">
-                        10
-                      </p>
-                    </div>
-                    <div className="group flex items-center space-x-2 cursor-pointer">
-                      <HeartOutlined className="text-gray-500 text-lg mt-2 cursor-pointer   group-hover:text-[#8C174A] " />
-                      <p className="mt-3 text-sm text-slate-600 group-hover:text-[#8C174A]">
-                        10
-                      </p>
-                    </div>
-                  </div>
-                </div>
+              <div className="flex space-x-10 ">
+              <div className="group flex items-center cursor-pointer space-x-2">
+                <CommentOutlined className="text-gray-500 text-lg mt-2    group-hover:text-[#1D9BF0] " />
+                <p className="mt-3 text-sm text-slate-600 group-hover:text-[#1d9bf0]">
+                  {tweet?.comments.length}
+                </p>
               </div>
+              <div className="group flex items-center space-x-2 cursor-pointer">
+                <HeartOutlined className="text-gray-500 text-lg mt-2 cursor-pointer   group-hover:text-[#8C174A] " />
+                <p className="mt-3 text-sm text-slate-600 group-hover:text-[#8C174A]">
+                  {tweet?.likes.length}
+                </p>
+              </div>
+            </div>
+                  
+                </div>
+              </div> 
+            </div>
             ))
           )}
         </div>

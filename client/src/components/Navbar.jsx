@@ -7,14 +7,18 @@ import {
   LogoutOutlined,
 } from "@ant-design/icons";
 
-import { signOut } from "firebase/auth";
 import { UserContext } from "../state/UserProvider";
 import { Link, useLocation ,useNavigate } from "react-router-dom";
-import TweetModal from "./TweetModal";
+import TweetModal from "./TweetModal"; 
+import { useState } from "react";
+
 export default function Navbar() {
   const user_ctx = useContext(UserContext);
   const location = useLocation();
-  const navigate = useNavigate() ;
+  const navigate = useNavigate() ;  
+  const [shownf,setshownf] = useState(false) ;
+  const lastNotificationCount = localStorage.getItem('nf_coount') ;  
+  console.log(shownf);
   const changeClickedState = (state) => {
     const newClickedState = {
       home: false,
@@ -32,7 +36,19 @@ export default function Navbar() {
       if (location.pathname === "/notification")
         changeClickedState("notification");
     }
-  }, [location]);
+  }, [location]); 
+
+
+
+  useEffect(()=> { 
+    console.log('d') 
+  
+    if(user_ctx.user?.notifications) {
+       setshownf(user_ctx.user?.notifications.length ===Number( localStorage.getItem('nf_count'))?false : true) 
+    }
+  },[localStorage.getItem('nf_count'),user_ctx.user?.notifications])
+
+
   return (
     <>
       {user_ctx.tweetModal && <TweetModal />}
@@ -63,8 +79,11 @@ export default function Navbar() {
               <div
                 className="flex items-center cursor-pointer hover:bg-slate-900  px-4  pb-2 mr-3 rounded-full"
                 onClick={() => changeClickedState("notification")}
-              >
-                <BellOutlined className="text-white text-3xl" />
+              >  
+                <div className="relative"> 
+                 {shownf &&  <div className="h-3 w-3 left-6 top-1 rounded-full bg-cyan-500 absolute"></div>}
+                  <BellOutlined className="text-white text-3xl" />
+                </div>
                 <h1
                   className={`text-white ml-5 font-${
                     user_ctx.navClicks.notification ? "bold" : "normal"

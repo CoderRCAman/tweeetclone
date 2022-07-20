@@ -54,7 +54,19 @@ const userSchema = new mongoose.Schema(
         type: mongoose.Schema.Types.ObjectId,
         ref: "tweet",
       },
-    ]
+    ],
+    notifications :[
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "tweet",
+      },
+    ] ,
+    feeds : [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "tweet",
+      },
+    ] 
   },
   {
     timestamps: true,

@@ -14,6 +14,9 @@ import Landing from "./pages/Landing";
 import Profile from "./pages/Profile"; 
 import Notifications from "./pages/Notifications";
 import Register from "./pages/Register";
+import Post from "./pages/Post";
+import ViewProfile from "./pages/ViewProfile";
+import Follow from "./pages/Follow"
 //TO DO -> make a global context api to store all the authenticated information
 //alogin with users details,etc ..
 export default function App() {
@@ -48,6 +51,24 @@ export default function App() {
             path="/notification"
             element={
               isAuthenticated() ? <Notifications /> : <Navigate to="/login" />
+            }
+          /> 
+           <Route
+            path="/post/:postId"
+            element={
+              isAuthenticated() ? <Post /> : <Navigate to="/login" />
+            }
+          />
+           <Route
+            path="/profile/:id"
+            element={
+              isAuthenticated() ? <ViewProfile /> : <Navigate to="/login" />
+            }
+          />
+           <Route
+            path="/follow"
+            element={
+              isAuthenticated() ? <Follow /> : <Navigate to="/login" />
             }
           />
         </Routes>

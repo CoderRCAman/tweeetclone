@@ -23,7 +23,8 @@
     "react-textarea-autosize": "^8.3.3",
     "shortid": "^2.2.16",
     "slugify": "^1.6.5",
-    "tailwindcss": "^3.0.24"
+    "tailwindcss": "^3.0.24",
+    "use-debounce": "^8.0.1"
   },
   "devDependencies": {
     "@types/react": "^18.0.0",
